@@ -11,8 +11,6 @@ import matplotlib.pyplot as plt
 from tkinter import messagebox
 
 
-# you have to change this link
-link ='C:\\Users\\User\\Documents\\Stage_4A_Vanessa\\Interface\\Images'
 
 root = None
 axs = None 
@@ -56,6 +54,10 @@ def update_graph(axs,time,value, event_data):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ----------------------------- MAIN FUNCTION -------------------------------------------------
 def window_1(next_callback, back_callback, event_data, option, value, value_bandpass):
+    # you have to change this link
+    link ='C:\\Users\\User\\Documents\\Stage_4A_Vanessa\\Interface\\Images'
+
+    
     global root
     # Créer la fenêtre principale
     root = Toplevel()
