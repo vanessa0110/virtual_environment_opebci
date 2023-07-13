@@ -3,48 +3,46 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# load the data 
-road = 'C:\\Users\\User\\Documents\\Stage_4A_Vanessa\\doc_matlab'
-raw_data = pd.read_csv(road +'/2021911-19-2-data.csv', delimiter=',')
-# Separate data according to the tasks 
-raw_data['Time'] = raw_data['Time']/ 1000000 #put the time in seconds
-event_data = pd.read_csv(road+'\\2021911-19-2-events.csv', delimiter=',')
-
-
-
-def splite_data_create_variables():
+######################################################################################################################################
+def create_values(raw_data, event_data):
     # We create different dataframe with the different tasks and we put inside it the part of the dataframe raw_data  that correspond
     #--------------------------------------------------------------------------------------------------------
-    value1 = raw_data[raw_data['Time']==event_data.iloc[2,0]/1000000].index.item()
-    global start
-    start = raw_data.iloc[0:value1,:]
-    value2 = raw_data[raw_data['Time']==event_data.iloc[3,0]/1000000].index.item()
-    global open_eyes_1
-    open_eyes_1 = raw_data.iloc[value1:value2,:]
-    value3 = raw_data[raw_data['Time']==event_data.iloc[4,0]/1000000].index.item()
-    global close_eyes
-    close_eyes = raw_data.iloc[value2:value3,:]
-    value4 = raw_data[raw_data['Time']==event_data.iloc[5,0]/1000000].index.item()
-    global pause_1
-    pause_1 = raw_data.iloc[value3:value4,:]
-    value5 = raw_data[raw_data['Time']==event_data.iloc[125,0]/1000000].index.item()
-    global IMG_TASK_1
-    IMG_TASK_1 = raw_data.iloc[value4:value5,:]
-    value6 = raw_data[raw_data['Time']==event_data.iloc[126,0]/1000000].index.item()
-    global pause_2
-    pause_2 = raw_data.iloc[value5:value6,:]
-    value7 = raw_data[raw_data['Time']==event_data.iloc[245,0]/1000000].index.item()
-    global IMG_TASK_2
-    IMG_TASK_2 = raw_data.iloc[value6:value7,:]
-    value8 = raw_data[raw_data['Time']==event_data.iloc[246,0]/1000000].index.item()
-    global pause_3
-    pause_3 = raw_data.iloc[value7:value8,:]
-    value9 = raw_data[raw_data['Time']==event_data.iloc[247,0]/1000000].index.item()
-    global open_eyes_2
-    open_eyes_2 = raw_data.iloc[value8:value9,:]
+    value1 = raw_data[raw_data['Time']==event_data.iloc[2,0]].index.item()
+    value2 = raw_data[raw_data['Time']==event_data.iloc[3,0]].index.item()
+    value3 = raw_data[raw_data['Time']==event_data.iloc[4,0]].index.item()
+    value4 = raw_data[raw_data['Time']==event_data.iloc[5,0]].index.item()
+    value5 = raw_data[raw_data['Time']==event_data.iloc[125,0]].index.item()
+    value6 = raw_data[raw_data['Time']==event_data.iloc[126,0]].index.item()
+    value7 = raw_data[raw_data['Time']==event_data.iloc[245,0]].index.item()
+    value8 = raw_data[raw_data['Time']==event_data.iloc[246,0]].index.item()
+    value9 = raw_data[raw_data['Time']==event_data.iloc[247,0]].index.item()
     #--------------------------------------------------------------------------------------------------------
+    return value1,value2,value3,value4,value5,value6,value7,value8,value9
+######################################################################################################################################
 
 
+######################################################################################################################################
+def create_tasks(raw_data, event_data):
+    value1,value2,value3,value4,value5,value6,value7,value8,value9 = create_values(raw_data, event_data)
+    start = raw_data.iloc[0:value1,:]
+    open_eyes_1 = raw_data.iloc[value1:value2,:]
+    close_eyes = raw_data.iloc[value2:value3,:]
+    pause_1 = raw_data.iloc[value3:value4,:]
+    IMG_TASK_1 = raw_data.iloc[value4:value5,:]
+    pause_2 = raw_data.iloc[value5:value6,:]
+    IMG_TASK_2 = raw_data.iloc[value6:value7,:]
+    pause_3 = raw_data.iloc[value7:value8,:]
+    open_eyes_2 = raw_data.iloc[value8:value9,:]
+    
+    return start, open_eyes_1, close_eyes, pause_1, IMG_TASK_1, pause_2, IMG_TASK_2, pause_3, open_eyes_2
+######################################################################################################################################
+
+
+
+######################################################################################################################################
+def splite_10_seconds_by_10_seconds(raw_data, event_data):
+    global start, pause_1
+    start, open_eyes_1, close_eyes, pause_1, IMG_TASK_1, pause_2, IMG_TASK_2, pause_3, open_eyes_2 = create_tasks(raw_data, event_data)
     # Create several dataframe 10 seconds by 10 seconds for each taks. Here we need to do this for 7 variables
     #  -------------------------------------------- Start ----------------------------------------------
     start.set_index('Time', inplace=True) # put the column as index
@@ -139,5 +137,5 @@ def splite_data_create_variables():
         oe2_groups_dataframes[group] = pd.DataFrame(group_df.copy())  # Stocker une copie du DataFrame du groupe
         globals()[name_of_variable] = oe2_groups_dataframes[group]
     # --------------------------------------------------------------------------------------------------
-    
+######################################################################################################################################
     
