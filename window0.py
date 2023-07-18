@@ -10,7 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from tkinter import messagebox
 import importlib
-import window_1
+import wind1_bis
 import splite_task
 import bandpass
 
@@ -31,7 +31,7 @@ def windoww0(file_path,file_path_2):
 
     importlib.reload(splite_task) #last version of splite_task
     splite_task.splite_10_seconds_by_10_seconds(raw_data, event_data)
-    importlib.reload(window_1) #last version of wind1_bis
+    importlib.reload(wind1_bis) #last version of wind1_bis
 
     #creation of a window
     root=Toplevel()
@@ -93,23 +93,23 @@ def windoww0(file_path,file_path_2):
     # ----------------------------------------------------------------------------------------------------------
 
     list = [splite_task.start, liste_oe1, liste_ce, splite_task.pause_1, liste_it1, liste_p2, liste_it2, liste_p3, liste_oe2]
-
     
     ###################################################### BANDPASS DATA #######################################
     importlib.reload(bandpass)
     bandpass_data = bandpass.bandpass_function(raw_data)
     #bandpass_data['Time'] = bandpass_data['Time']/ 1000000 #put the time in seconds
     splite_task.splite_10_seconds_by_10_seconds(bandpass_data, event_data)
-    liste_oe1 = [eval(f"splite_task.oe1_{i}_df") for i in range(13)]
-    liste_ce = [eval(f"splite_task.ce_{i}_df") for i in range(13)]
-    liste_it1 = [eval(f"splite_task.it1_{i}_df") for i in range(32)]
-    liste_p2 = [eval(f"splite_task.p2_{i}_df") for i in range(13)]
-    liste_it2 = [eval(f"splite_task.it2_{i}_df") for i in range(32)]
-    liste_p3 = [eval(f"splite_task.p3_{i}_df") for i in range(2)]
-    liste_oe2 = [eval(f"splite_task.oe2_{i}_df") for i in range(13)]
+    liste_oe1_bandpass = [eval(f"splite_task.oe1_{i}_df") for i in range(13)]
+    liste_ce_bandpass = [eval(f"splite_task.ce_{i}_df") for i in range(13)]
+    liste_it1_bandpass = [eval(f"splite_task.it1_{i}_df") for i in range(32)]
+    liste_p2_bandpass = [eval(f"splite_task.p2_{i}_df") for i in range(13)]
+    liste_it2_bandpass = [eval(f"splite_task.it2_{i}_df") for i in range(32)]
+    liste_p3_bandpass = [eval(f"splite_task.p3_{i}_df") for i in range(2)]
+    liste_oe2_bandpass = [eval(f"splite_task.oe2_{i}_df") for i in range(13)]
     # ----------------------------------------------------------------------------------------------------------
 
-    list_bandpass = [splite_task.start, liste_oe1, liste_ce, splite_task.pause_1, liste_it1, liste_p2, liste_it2, liste_p3, liste_oe2]
+    list_bandpass = [splite_task.start, liste_oe1_bandpass, liste_ce_bandpass, splite_task.pause_1, liste_it1_bandpass, liste_p2_bandpass,
+                     liste_it2_bandpass, liste_p3_bandpass, liste_oe2_bandpass]
 
 
 
@@ -117,7 +117,7 @@ def windoww0(file_path,file_path_2):
     # ------------------------- We create a menu where people can select the task they want to see ------------
     # Create a general function to plot data and vertical lines, it's better
     def call_plot(value, value_bandpass, option):
-        window_1.window_1(next_10_seconds,back_10_seconds, event_data, option, value, value_bandpass)
+        wind1_bis.window_1(next_10_seconds,back_10_seconds, event_data, option, value, value_bandpass)
     ###############################################################################################################
 
 
@@ -187,9 +187,9 @@ def windoww0(file_path,file_path_2):
         if  current_index !=0:
             # say message if we are already at the begining or at the end of the list
             if direction == "next":
-                messagebox.showinfo("End of list", "You have reached the end of the list.", parent=window_1.root)
+                messagebox.showinfo("End of list", "You have reached the end of the list.", parent=wind1_bis.root)
             elif direction == "back":
-                messagebox.showinfo("Start of list", "You have reached the start of the list.", parent=window_1.root)
+                messagebox.showinfo("Start of list", "You have reached the start of the list.", parent=wind1_bis.root)
     ###############################################################################################################
         
         
@@ -207,18 +207,18 @@ def windoww0(file_path,file_path_2):
             value = list[i][current_index]
             time = value.index
             colors = ["#EF9A60", "#A1E7A6", "#A1E7DD", "#A1BCE7", "#A4A1E7", "#CCA1E7", "#E7A1D4", "#E7A1AD", "#B98079"] 
-            for i, ax in enumerate(window_1.axs):
+            for k, ax in enumerate(wind1_bis.axs):
                 ax.cla()
-                ax.plot(time, value[value.columns[i]], label=value.columns[i], alpha=0.5, color=colors[i])
-                window_1.vertical_lines(ax, time.min(), time.max(), event_data)
+                ax.plot(time, value[value.columns[k]], label=value.columns[k], alpha=0.5, color=colors[k])
+                wind1_bis.vertical_lines(ax, time.min(), time.max(), event_data)
                 ax.set_ylabel('')
-                if i != 8:
+                if k != 8:
                     ax.set_xticks([])
                 else:
                     ax.set_xlabel('Time (in seconds)')
                 # new limits for y_axis
-                ymin = value[value.columns[i]].min()
-                ymax = value[value.columns[i]].max()
+                ymin = value[value.columns[k]].min()
+                ymax = value[value.columns[k]].max()
                 ax.set_ylim(ymin, ymax)
                 ax.set_xlim(time.min(), time.max())
             ax.figure.canvas.draw()
@@ -228,30 +228,30 @@ def windoww0(file_path,file_path_2):
         #----------------------------------------------------------------------------------------------------------------
         if 0 <= current_index < len(list_bandpass[i]):
             value2 = list_bandpass[i][current_index]
-            time = value2.index
+            time2 = value2.index
             colors = ["#EF9A60", "#A1E7A6", "#A1E7DD", "#A1BCE7", "#A4A1E7", "#CCA1E7", "#E7A1D4", "#E7A1AD", "#B98079"] 
-            for i, ax in enumerate(window_1.axes):
+            for j, ax in enumerate(wind1_bis.axes):
                 ax.cla()
-                ax.plot(time, value2[value2.columns[i]], label=value2.columns[i], alpha=0.5, color=colors[i])
-                window_1.vertical_lines(ax, time.min(), time.max(), event_data)
+                ax.plot(time2, value2[value2.columns[j]], label=value2.columns[j], alpha=0.5, color=colors[j])
+                wind1_bis.vertical_lines(ax, time2.min(), time2.max(), event_data)
                 ax.set_ylabel('')
-                if i != 8:
+                if j != 8:
                     ax.set_xticks([])
                 else:
                     ax.set_xlabel('Time (in seconds)')
                 # new limits for y_axis
-                ymin = value2[value2.columns[i]].min()
-                ymax = value2[value2.columns[i]].max()
+                ymin = value2[value2.columns[j]].min()
+                ymax = value2[value2.columns[j]].max()
                 ax.set_ylim(ymin, ymax)
-                ax.set_xlim(time.min(), time.max())
+                ax.set_xlim(time2.min(), time2.max())
             ax.figure.canvas.draw()
         #----------------------------------------------------------------------------------------------------------------
         else:
             # say message if we are already at the begining or at the end of the list
             if direction == "next":
-                messagebox.showinfo("End of list", "You have reached the end of the list.", parent=window_1.root)
+                messagebox.showinfo("End of list", "You have reached the end of the list.", parent=wind1_bis.root)
             elif direction == "back":
-                messagebox.showinfo("Start of list", "You have reached the start of the list.", parent=window_1.root)
+                messagebox.showinfo("Start of list", "You have reached the start of the list.", parent=wind1_bis.root)
     ###############################################################################################################
 
 
